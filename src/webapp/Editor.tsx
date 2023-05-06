@@ -1,6 +1,14 @@
 import MonacoEditor from '@uiw/react-monacoeditor';
+import { ReactElement } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-function Editor(props) {
+import { renderToString } from 'react-dom/server';
+
+type Props = {
+  input: string,
+  children: string | JSX.Element | JSX.Element[]
+}
+
+function Editor({ input, children }: Props) {
 
   const options = {
     selectOnLineNumbers: true,
@@ -57,16 +65,20 @@ function Editor(props) {
             editorDidMount={editorDidMount}
             // onChange={onChange}
             language={language_editor}
-            // value={code}
+            value={input}
             options={options}
           />
         </Col>
         <Col>
           <h6>Render Output</h6>
+
+          {children}
+
           <MonacoEditor
             height={height}
             language={language_render}
-            // value={output}
+            // value={renderToString(output)}
+            value={renderToString(children)}
             options={{ ...options, readOnly: true }}
           />
         </Col>

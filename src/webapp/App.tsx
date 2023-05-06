@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import Editor from './Editor';
 import { useQuery } from '@tanstack/react-query';
 import Renderer from './Renderer';
+import { renderToString } from 'react-dom/server';
+import ReactDOM from 'react-dom/client';
 
 type FileContent = {
   fielname: string,
@@ -67,7 +69,19 @@ function App() {
   if (error instanceof Error) return 'An error has occurred: ' + error.message
 
   if (files.length != 0)
-    if (filesContentLoaded === true)
+    if (filesContentLoaded === true) {
+      // const htmlDoc = document.implementation.createHTMLDocument("Renderer-Output");
+      // const div_root = htmlDoc.createElement("div");
+      // div_root.setAttribute("id", "root");
+      // try {
+      //   htmlDoc.body.appendChild(div_root);
+      // } catch (e) {
+      //   console.log(e);
+      // }
+      // if (htmlDoc !== null) {
+      //   const renderOutput = ReactDOM.createRoot(htmlDoc.getElementById('root')).render(<h1>Hello, world</h1>)
+      //   console.log(renderOutput);
+      // }
       return (
         <>
           <header className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
@@ -133,13 +147,22 @@ function App() {
               </div>
             </div> */}
 
-                <Renderer
+                {/* <Renderer
                   filesAndContent={filesAndContent}
-                  // template='templates/worker-deployment.yaml'
                   template='templates/service.yaml'
-                />
+                /> */}
 
-                {/* <Editor /> */}
+                <div id="output-root">
+
+                </div>
+
+                <Editor
+                  input={""}
+                  // output={ReactDOM.render(<Renderer filesAndContent={filesAndContent} template='templates/service.yaml' />)}
+                  // output={""}
+                >
+                  <Renderer filesAndContent={filesAndContent} template='templates/service.yaml' />;
+                </Editor>
 
                 {/* {files.map((file, index) => {
               return file;
@@ -151,6 +174,7 @@ function App() {
 
         </>
       )
+    }
 }
 
 export default App
