@@ -1,12 +1,11 @@
 import { Container, Row } from 'react-bootstrap';
 import { PlusCircle } from 'react-feather';
 import { useEffect, useState } from 'react';
-
-import Editor from './Editor';
 import { useQuery } from '@tanstack/react-query';
-import Renderer from './Renderer';
-import { renderToString } from 'react-dom/server';
-import ReactDOM from 'react-dom/client';
+import TemplateOutput from './TemplateOutput';
+import Editor from './Editor';
+import { editor } from 'monaco-editor';
+import { monaco } from 'react-monaco-editor';
 
 type FileContent = {
   fielname: string,
@@ -14,8 +13,11 @@ type FileContent = {
 }
 
 function App() {
-  const [files, setFiles] = useState<string[]>(new Array<string>());
+  const [output, setOutput] = useState<string>("");
+  const [code, setCode] = useState<string>("");
+  const [selectedTemplateFile, setSelectedTemplateFile] = useState<string>("templates/service.yaml");
 
+  const [files, setFiles] = useState<string[]>(new Array<string>());
   const [filesAndContent, setFilesAndContent] = useState<Map<string, string>>(new Map<string, string>());
   const [filesContentLoaded, setFilesContentLoaded] = useState(false);
 
@@ -59,34 +61,30 @@ function App() {
 
         setFilesAndContent(filesAndContent);
         setFilesContentLoaded(true);
+
+        setCode(filesAndContent.get(selectedTemplateFile));
       });
     }
     getFiles();
 
-  }, [files, filesContentLoaded, setFilesAndContent]);
+  }, [files, filesContentLoaded, selectedTemplateFile, setFilesAndContent]);
 
-  if (isFetching) return 'Loading...'
-  if (error instanceof Error) return 'An error has occurred: ' + error.message
+  if (isFetching) return (<>'Loading...'</>)
+  if (error instanceof Error) return (<>'An error has occurred: ' + error.message</>)
+  if (files.length === 0) return (<>'No Files available...'</>)
+  if (filesContentLoaded === false) return (<>'Files Content not yet loaded...'</>)
 
-  if (files.length != 0)
-    if (filesContentLoaded === true) {
-      // const htmlDoc = document.implementation.createHTMLDocument("Renderer-Output");
-      // const div_root = htmlDoc.createElement("div");
-      // div_root.setAttribute("id", "root");
-      // try {
-      //   htmlDoc.body.appendChild(div_root);
-      // } catch (e) {
-      //   console.log(e);
-      // }
-      // if (htmlDoc !== null) {
-      //   const renderOutput = ReactDOM.createRoot(htmlDoc.getElementById('root')).render(<h1>Hello, world</h1>)
-      //   console.log(renderOutput);
-      // }
-      return (
-        <>
-          <header className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-            <a className="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">Company name</a>
-            {/* <button className="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
+  function onChange(newValue: string) {
+    TemplateOutput(filesAndContent, newValue).then((output) => {
+      setOutput(output);
+    });
+  }
+
+  return (
+    <>
+      <header className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+        <a className="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">Company name</a>
+        {/* <button className="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
           data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
@@ -97,42 +95,42 @@ function App() {
               <a className="nav-link px-3" href="#">Sign out</a>
             </div>
           </div> */}
-          </header>
+      </header>
 
-          <Container fluid className="">
-            <Row>
-              <nav id="sidebarMenu" className="col-md-3 col-lg-2 d-md-block bg-body-tertiary sidebar collapse">
-                <div className="position-sticky pt-3 sidebar-sticky">
-                  <ul className="nav flex-column">
-                    <li className="nav-item">
-                      <a className="nav-link active" aria-current="page" href="#">
-                        <span data-feather="home" className="align-text-bottom"></span>
-                        Dashboard
-                      </a>
-                    </li>
-                  </ul>
+      <Container fluid className="">
+        <Row>
+          <nav id="sidebarMenu" className="col-md-3 col-lg-2 d-md-block bg-body-tertiary sidebar collapse">
+            <div className="position-sticky pt-3 sidebar-sticky">
+              <ul className="nav flex-column">
+                <li className="nav-item">
+                  <a className="nav-link active" aria-current="page" href="#">
+                    <span data-feather="home" className="align-text-bottom"></span>
+                    Dashboard
+                  </a>
+                </li>
+              </ul>
 
-                  {/* List Files / Directories */}
-                  <h6
-                    className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
-                    <span>Files</span>
-                    <a className="link-secondary" href="#" aria-label="Add a new report">
-                      <PlusCircle className='feather align-text-bottom' />
-                    </a>
-                  </h6>
-                  <ul className="nav flex-column mb-2">
-                    {/* <li className="nav-item">
+              {/* List Files / Directories */}
+              <h6
+                className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
+                <span>Files</span>
+                <a className="link-secondary" href="#" aria-label="Add a new report">
+                  <PlusCircle className='feather align-text-bottom' />
+                </a>
+              </h6>
+              <ul className="nav flex-column mb-2">
+                {/* <li className="nav-item">
                   <a className="nav-link" href="#">
                     <span data-feather="file-text" className="align-text-bottom"></span>
                     Current month
                   </a>
                 </li> */}
-                  </ul>
-                </div>
-              </nav>
+              </ul>
+            </div>
+          </nav>
 
-              <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                {/* <div
+          <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            {/* <div
               className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
               <h1 className="h2">Dashboard</h1>
               <div className="btn-toolbar mb-2 mb-md-0">
@@ -147,26 +145,19 @@ function App() {
               </div>
             </div> */}
 
-                {/* <Renderer
-                  filesAndContent={filesAndContent}
-                  template='templates/service.yaml'
-                /> */}
+            <Editor
+              input={code}
+              output={output}
+              onChange={onChange}
+            />
 
-                <Editor
-                  input={""}
-                  // output={ReactDOM.render(<Renderer filesAndContent={filesAndContent} template='templates/service.yaml' />)}
-                  output={""}
-                // <Renderer filesAndContent={filesAndContent} template='templates/service.yaml' />;
-                />
+          </main>
 
-              </main>
+        </Row>
+      </Container>
 
-            </Row>
-          </Container>
-
-        </>
-      )
-    }
+    </>
+  )
 }
 
 export default App

@@ -1,14 +1,20 @@
 import MonacoEditor from '@uiw/react-monacoeditor';
-import { ReactElement } from 'react';
+// import MonacoEditor from 'react-monaco-editor';
 import { Col, Container, Row } from 'react-bootstrap';
-import { renderToString } from 'react-dom/server';
+import { monaco } from 'react-monaco-editor';
 
 type Props = {
-  input: string,
-  output: string,
+  input: string | undefined,
+  output: string | undefined,
+  onChange: (newValue: string, event: monaco.editor.IModelContentChangedEvent) => void
 }
 
-function Editor({ input, output }: Props) {
+function Editor(
+  {
+    input,
+    output,
+    onChange = (newValue: string, event: monaco.editor.IModelContentChangedEvent) => { console.debug("event", event); }
+  }: Props) {
 
   const options = {
     selectOnLineNumbers: true,
@@ -47,10 +53,10 @@ function Editor({ input, output }: Props) {
     // editor.focus();
   }
 
-  function onChange(newValue: string, event: monaco.editor.IModelContentChangedEvent) {
-    console.debug("event", event);
-    // setOutput(newValue);
-  }
+  /*   function onChange(newValue: string, event: monaco.editor.IModelContentChangedEvent) {
+      console.debug("event", event);
+      // setOutput(newValue);
+    } */
 
   return (
     <Container fluid>
@@ -63,7 +69,7 @@ function Editor({ input, output }: Props) {
           <MonacoEditor
             height={height}
             editorDidMount={editorDidMount}
-            // onChange={onChange}
+            onChange={onChange}
             language={language_editor}
             value={input}
             options={options}
@@ -75,8 +81,7 @@ function Editor({ input, output }: Props) {
           <MonacoEditor
             height={height}
             language={language_render}
-            // value={renderToString(output)}
-            value={renderToString(output)}
+            value={output}
             options={{ ...options, readOnly: true }}
           />
         </Col>

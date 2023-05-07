@@ -27,6 +27,7 @@
     "react-bootstrap": "^2.7.4",
     "react-dom": "^18.2.0",
     "react-feather": "^2.0.10",
+    "react-monaco-editor": "^0.52.0",
     "react-router-dom": "^6.10.0",
     "sort-by": "^1.2.0"
   },
