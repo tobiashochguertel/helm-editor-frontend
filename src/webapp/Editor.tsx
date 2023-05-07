@@ -5,10 +5,10 @@ import { renderToString } from 'react-dom/server';
 
 type Props = {
   input: string,
-  children: string | JSX.Element | JSX.Element[]
+  output: string,
 }
 
-function Editor({ input, children }: Props) {
+function Editor({ input, output }: Props) {
 
   const options = {
     selectOnLineNumbers: true,
@@ -72,13 +72,11 @@ function Editor({ input, children }: Props) {
         <Col>
           <h6>Render Output</h6>
 
-          {children}
-
           <MonacoEditor
             height={height}
             language={language_render}
             // value={renderToString(output)}
-            value={renderToString(children)}
+            value={renderToString(output)}
             options={{ ...options, readOnly: true }}
           />
         </Col>

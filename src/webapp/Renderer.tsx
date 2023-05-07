@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { kubernetesVersions, defaultKubernetesVersion } from "./Settings/kubernetesVersions"
+import { useEffect, useState } from "react";
+import { defaultKubernetesVersion } from "./Settings/kubernetesVersions"
 
 export type Filename = string;
 export type Filecontent = string;
@@ -34,15 +34,10 @@ function Renderer({ filesAndContent, template }: {
     }
   }
 
-  const [code, setCode] = useState("");
   const [output, setOutput] = useState("");
   const [outputRendered, setOutputRendered] = useState(false);
 
   const filesToRender: { [key: string]: string } = {};
-  // filesToRender['valuesSource'] = filesAndContent.get('values.yaml') || "";
-  // filesToRender['chartSource'] = filesAndContent.get('Chart.yaml') || "";
-  // filesToRender['template'] = "";
-  // filesToRender['_helpers.tpl'] = filesAndContent.get('_helpers.tpl') || "";
   filesAndContent.forEach((value, key) => {
     if (key === "values.yaml") return;
     if (key === "templates") return;

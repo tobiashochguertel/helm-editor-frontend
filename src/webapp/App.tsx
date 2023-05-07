@@ -152,21 +152,13 @@ function App() {
                   template='templates/service.yaml'
                 /> */}
 
-                <div id="output-root">
-
-                </div>
-
                 <Editor
                   input={""}
                   // output={ReactDOM.render(<Renderer filesAndContent={filesAndContent} template='templates/service.yaml' />)}
-                  // output={""}
-                >
-                  <Renderer filesAndContent={filesAndContent} template='templates/service.yaml' />;
-                </Editor>
+                  output={""}
+                // <Renderer filesAndContent={filesAndContent} template='templates/service.yaml' />;
+                />
 
-                {/* {files.map((file, index) => {
-              return file;
-            })} */}
               </main>
 
             </Row>
