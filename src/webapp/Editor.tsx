@@ -1,5 +1,4 @@
 import MonacoEditor from '@uiw/react-monacoeditor';
-// import MonacoEditor from 'react-monaco-editor';
 import { Col, Container, Row } from 'react-bootstrap';
 
 type Props = {
@@ -49,13 +48,8 @@ function Editor(
   const height = "500px"
 
   function editorDidMount(editor) {
-    // editor.focus();
+    editor.focus();
   }
-
-  /*   function onChange(newValue: string, event: monaco.editor.IModelContentChangedEvent) {
-      console.debug("event", event);
-      // setOutput(newValue);
-    } */
 
   return (
     <Container fluid>

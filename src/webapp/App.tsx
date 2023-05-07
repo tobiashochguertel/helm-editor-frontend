@@ -2,9 +2,9 @@ import { Container, Row } from 'react-bootstrap';
 import { PlusCircle } from 'react-feather';
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { Tree, useToasts } from '@geist-ui/core'
 import TemplateOutput from './TemplateOutput';
 import Editor from './Editor';
-import { Tree, useToasts } from '@geist-ui/core'
 
 type FileContent = {
   fielname: string,
@@ -97,6 +97,10 @@ function App() {
     setToast({ text: path })
     setSelectedTemplateFile(path);
     setCode(filesAndContent.get(path));
+
+    // PUT http://localhost:5342/api/file/.helmignore
+    // Content-Type: text/plain
+
   }
 
   return (
