@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import TemplateOutput from './TemplateOutput';
 import Editor from './Editor';
-import { editor } from 'monaco-editor';
-import { monaco } from 'react-monaco-editor';
+import { Tree, useToasts } from '@geist-ui/core'
 
 type FileContent = {
   fielname: string,
@@ -13,9 +12,12 @@ type FileContent = {
 }
 
 function App() {
+  const { setToast } = useToasts()
+
   const [output, setOutput] = useState<string>("");
   const [code, setCode] = useState<string>("");
   const [selectedTemplateFile, setSelectedTemplateFile] = useState<string>("templates/service.yaml");
+  const [filesTree, setFilesTree] = useState([]);
 
   const [files, setFiles] = useState<string[]>(new Array<string>());
   const [filesAndContent, setFilesAndContent] = useState<Map<string, string>>(new Map<string, string>());
@@ -41,6 +43,20 @@ function App() {
         await fetch(`/api/list`)
       ).json();
       setFiles(data);
+
+      // Create Files Tree from Flat list.
+
+      return data;
+    }
+  )
+
+  const { errorTree, isFetchingTree } = useQuery(
+    ['tree'],
+    async () => {
+      const data = await (
+        await fetch(`/api/tree`)
+      ).json();
+      setFilesTree(data);
       return data;
     }
   )
@@ -62,7 +78,7 @@ function App() {
         setFilesAndContent(filesAndContent);
         setFilesContentLoaded(true);
 
-        setCode(filesAndContent.get(selectedTemplateFile));
+        // setCode(filesAndContent.get(selectedTemplateFile));
       });
     }
     getFiles();
@@ -73,11 +89,19 @@ function App() {
   if (error instanceof Error) return (<>'An error has occurred: ' + error.message</>)
   if (files.length === 0) return (<>'No Files available...'</>)
   if (filesContentLoaded === false) return (<>'Files Content not yet loaded...'</>)
+  if (isFetchingTree) return (<>'Loading...'</>)
+  if (errorTree instanceof Error) return (<>'An error has occurred: ' + error.message</>)
 
   function onChange(newValue: string) {
     TemplateOutput(filesAndContent, newValue).then((output) => {
       setOutput(output);
     });
+  }
+
+  const handler = (path: any) => {
+    setToast({ text: path })
+    setSelectedTemplateFile(path);
+    setCode(filesAndContent.get(path));
   }
 
   return (
@@ -126,6 +150,11 @@ function App() {
                   </a>
                 </li> */}
               </ul>
+
+              <Tree
+                onClick={handler}
+                value={filesTree} />
+
             </div>
           </nav>
 
