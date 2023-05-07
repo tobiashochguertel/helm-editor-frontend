@@ -43,9 +43,6 @@ function App() {
         await fetch(`/api/list`)
       ).json();
       setFiles(data);
-
-      // Create Files Tree from Flat list.
-
       return data;
     }
   )
@@ -77,8 +74,6 @@ function App() {
 
         setFilesAndContent(filesAndContent);
         setFilesContentLoaded(true);
-
-        // setCode(filesAndContent.get(selectedTemplateFile));
       });
     }
     getFiles();
