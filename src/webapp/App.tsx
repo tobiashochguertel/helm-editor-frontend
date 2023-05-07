@@ -78,7 +78,7 @@ function App() {
     }
     getFiles();
 
-  }, [files, filesContentLoaded, selectedTemplateFile, setFilesAndContent]);
+  }, [files, filesContentLoaded, setFilesAndContent]);
 
   if (isFetching) return (<>'Loading...'</>)
   if (error instanceof Error) return (<>'An error has occurred: ' + error.message</>)
@@ -87,7 +87,7 @@ function App() {
   if (isFetchingTree) return (<>'Loading...'</>)
   if (errorTree instanceof Error) return (<>'An error has occurred: ' + error.message</>)
 
-  function onChange(newValue: string) {
+  function onChange(newValue: string, e: Event) {
     TemplateOutput(filesAndContent, newValue).then((output) => {
       setOutput(output);
     });

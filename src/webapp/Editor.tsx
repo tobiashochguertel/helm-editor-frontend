@@ -1,19 +1,18 @@
 import MonacoEditor from '@uiw/react-monacoeditor';
 // import MonacoEditor from 'react-monaco-editor';
 import { Col, Container, Row } from 'react-bootstrap';
-import { monaco } from 'react-monaco-editor';
 
 type Props = {
   input: string | undefined,
   output: string | undefined,
-  onChange: (newValue: string, event: monaco.editor.IModelContentChangedEvent) => void
+  onChange: (newValue: string, e: Event) => void
 }
 
 function Editor(
   {
     input,
     output,
-    onChange = (newValue: string, event: monaco.editor.IModelContentChangedEvent) => { console.debug("event", event); }
+    onChange = (newValue: string, e: Event) => { console.debug("event"); }
   }: Props) {
 
   const options = {
