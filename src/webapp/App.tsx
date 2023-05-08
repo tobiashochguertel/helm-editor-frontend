@@ -75,9 +75,8 @@ function App() {
     console.debug("onChange.newValue", newValue);
     console.debug("onChange.selectedFile", selectedFile);
 
-    TemplateOutput(filesAndContent, newValue).then((output) => {
-      setOutput(output);
-    });
+    TemplateOutput(filesAndContent, newValue)
+      .then((output) => setOutput(output));
 
     const requestOptions = {
       method: 'PUT',
@@ -86,6 +85,7 @@ function App() {
     };
     fetch(`/api/file/${selectedFile}`, requestOptions)
       .then(response => response.text())
+    // .then(response => filesAndContent.set(selectedFile, newValue));
     // .then(response => setToast({ text: response }));
   }
 
@@ -135,12 +135,14 @@ function App() {
           </nav>
 
           <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            {selectedFile && <Editor
+            <Editor
+              key={selectedFile}
               input={code}
+              // output={""}
               output={output}
               onChange={onChange}
               selectedFile={selectedFile}
-            />}
+            />
           </main>
 
         </Row>

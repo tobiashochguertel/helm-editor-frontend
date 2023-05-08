@@ -57,6 +57,7 @@ export default async function helmChartTemplateOutput(
     if (key === "templates/db-initialize-job.yaml") return;
     if (key === "templates/cronjob.yaml") return;
     if (key === ".helmignore") return;
+    if (key === ".dockerignore") return;
     // if (key === "templates/_ingress-annotations.yaml") return;
     // if (key === "templates/_helpers.tpl") return;
 
