@@ -1,4 +1,5 @@
 import MonacoEditor from '@uiw/react-monacoeditor';
+
 import { Col, Container, Row } from 'react-bootstrap';
 
 type Props = {
@@ -45,7 +46,7 @@ function Editor(
 
   const language_editor = "yaml";
   const language_render = "yaml";
-  const height = "500px"
+  const height = "700px"
 
   function editorDidMount(editor) {
     editor.focus();
@@ -70,7 +71,6 @@ function Editor(
         </Col>
         <Col>
           <h6>Render Output</h6>
-
           <MonacoEditor
             height={height}
             language={language_render}
