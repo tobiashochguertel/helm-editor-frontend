@@ -6,6 +6,15 @@ import { Tree, useToasts } from '@geist-ui/core'
 import TemplateOutput from './TemplateOutput';
 import Editor from './Editor';
 
+function replaceSlash(filename: string) {
+  const SLASH = '%2F';
+
+  if (filename.indexOf("/") > -1) {
+    filename = filename.replace("/", SLASH);
+  }
+  return filename;
+}
+
 type FileContent = {
   fielname: string,
   content: string
@@ -13,15 +22,14 @@ type FileContent = {
 
 async function getContent(filename: string): Promise<FileContent> {
   // http://localhost:5173/api/file/templates%2Fworker-deployment.yaml
-  const SLASH = '%2F';
-  if (filename.indexOf("/") > -1) {
-    filename = filename.replace("/", SLASH);
-  }
+  filename = replaceSlash(filename);
 
   const data = await (
     await fetch(`/api/file/${filename}`)
   ).json();
   return data;
+
+
 }
 
 function App() {
@@ -67,14 +75,10 @@ function App() {
 
     getFiles();
 
-    console.debug("useEffect.selectedFile", selectedFile);
     setCode(filesAndContent.get(selectedFile));
   }, [files, filesAndContent, filesContentLoaded, filesTree.length, selectedFile, setFilesAndContent]);
 
   function onChange(newValue) {
-    console.debug("onChange.newValue", newValue);
-    console.debug("onChange.selectedFile", selectedFile);
-
     TemplateOutput(filesAndContent, newValue)
       .then((output) => setOutput(output));
 
@@ -83,16 +87,15 @@ function App() {
       headers: { 'Content-Type': 'text/plain' },
       body: newValue
     };
-    fetch(`/api/file/${selectedFile}`, requestOptions)
+    fetch(`/api/file/${replaceSlash(selectedFile)}`, requestOptions)
       .then(response => response.text())
-    // .then(response => filesAndContent.set(selectedFile, newValue));
-    // .then(response => setToast({ text: response }));
+      .then(() => filesAndContent.set(selectedFile, newValue))
+    // .then(() => console.debug("filesAndContent.get(selectedFile)", filesAndContent.get(selectedFile)));
   }
 
   const handler = (path: string) => {
     setToast({ text: path })
     if (selectedFile !== path) {
-      console.debug("File change detected.", selectedFile, path);
       setSelectedFile(path);
     }
   }
@@ -138,7 +141,6 @@ function App() {
             <Editor
               key={selectedFile}
               input={code}
-              // output={""}
               output={output}
               onChange={onChange}
               selectedFile={selectedFile}
