@@ -1,18 +1,24 @@
 import MonacoEditor from '@uiw/react-monacoeditor';
+// import MonacoEditor from 'react-monaco-editor';
 
 import { Col, Container, Row } from 'react-bootstrap';
 
 type Props = {
   input: string | undefined,
   output: string | undefined,
-  onChange: (newValue: string, e: Event) => void
+  onChange?: (newValue: any, e: any) => void,
+  selectedFile?: string,
 }
 
 function Editor(
   {
     input,
     output,
-    onChange = (newValue: string, e: Event) => { console.debug("event"); }
+    onChange = (newValue: any, e: any) => {
+      console.debug("newValue", newValue);
+      console.debug("e", e);
+    },
+    selectedFile = "",
   }: Props) {
 
   const options = {
@@ -59,7 +65,7 @@ function Editor(
         <h6>Values</h6>
       </Col> */}
         <Col>
-          <h6>Selected File</h6>
+          <h6>Selected File: {selectedFile}</h6>
           <MonacoEditor
             height={height}
             editorDidMount={editorDidMount}

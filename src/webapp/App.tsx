@@ -16,7 +16,7 @@ function App() {
 
   const [output, setOutput] = useState<string>("");
   const [code, setCode] = useState<string>("");
-  const [selectedTemplateFile, setSelectedTemplateFile] = useState<string>("templates/service.yaml");
+  const [selectedFile, setSelectedFile] = useState("");
   const [filesTree, setFilesTree] = useState([]);
 
   const [files, setFiles] = useState<string[]>(new Array<string>());
@@ -35,29 +35,6 @@ function App() {
     ).json();
     return data;
   }
-
-  const { error, isFetching } = useQuery(
-    ['files'],
-    async () => {
-      const data = await (
-        await fetch(`/api/list`)
-      ).json();
-      setFiles(data);
-      return data;
-    }
-  )
-
-  const { errorTree, isFetchingTree } = useQuery(
-    ['tree'],
-    async () => {
-      const data = await (
-        await fetch(`/api/tree`)
-      ).json();
-      setFilesTree(data);
-      return data;
-    }
-  )
-
   useEffect(() => {
     async function getFiles() {
       if (files.length == 0) return;
@@ -76,32 +53,51 @@ function App() {
         setFilesContentLoaded(true);
       });
     }
+
+    if (files.length === 0)
+      fetch(`/api/list`).then(response => response.json()).then((data) => {
+        setFiles(data);
+      });
+
+    if (filesTree.length === 0)
+      fetch(`/api/tree`).then(response => response.json()).then((data) => {
+        setFilesTree(data);
+      });
+
     getFiles();
 
-  }, [files, filesContentLoaded, setFilesAndContent]);
+    console.debug("useEffect.selectedFile", selectedFile);
+    setCode(filesAndContent.get(selectedFile));
+  }, [files, filesAndContent, filesContentLoaded, filesTree.length, selectedFile, setFilesAndContent]);
 
-  if (isFetching) return (<>'Loading...'</>)
-  if (error instanceof Error) return (<>'An error has occurred: ' + error.message</>)
-  if (files.length === 0) return (<>'No Files available...'</>)
-  if (filesContentLoaded === false) return (<>'Files Content not yet loaded...'</>)
-  if (isFetchingTree) return (<>'Loading...'</>)
-  if (errorTree instanceof Error) return (<>'An error has occurred: ' + error.message</>)
+  function onChange(newValue) {
+    console.debug("onChange.newValue", newValue);
+    console.debug("onChange.selectedFile", selectedFile);
 
-  function onChange(newValue: string, e: Event) {
     TemplateOutput(filesAndContent, newValue).then((output) => {
       setOutput(output);
     });
+
+    const requestOptions = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'text/plain' },
+      body: newValue
+    };
+    fetch(`/api/file/${selectedFile}`, requestOptions)
+      .then(response => response.text())
+    // .then(response => setToast({ text: response }));
   }
 
-  const handler = (path: any) => {
+  const handler = (path: string) => {
     setToast({ text: path })
-    setSelectedTemplateFile(path);
-    setCode(filesAndContent.get(path));
-
-    // PUT http://localhost:5342/api/file/.helmignore
-    // Content-Type: text/plain
-
+    if (selectedFile !== path) {
+      console.debug("File change detected.", selectedFile, path);
+      setSelectedFile(path);
+    }
   }
+
+  if (files.length === 0) return (<>'No Files available...'</>)
+  if (filesContentLoaded === false) return (<>'Files Content not yet loaded...'</>)
 
   return (
     <>
@@ -152,7 +148,8 @@ function App() {
 
               <Tree
                 onClick={handler}
-                value={filesTree} />
+                value={filesTree}
+              />
 
             </div>
           </nav>
@@ -173,11 +170,12 @@ function App() {
               </div>
             </div> */}
 
-            <Editor
+            {selectedFile && <Editor
               input={code}
               output={output}
               onChange={onChange}
-            />
+              selectedFile={selectedFile}
+            />}
 
           </main>
 

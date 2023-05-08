@@ -8,11 +8,12 @@ import './assets/wasm_exec.js'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import ErrorPage from './error-page.tsx'
-import App from './App.tsx'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { GeistProvider } from '@geist-ui/core'
+
+import ErrorPage from './error-page.tsx'
+import App from './App.tsx'
 
 const router = createBrowserRouter([
   {
@@ -30,7 +31,7 @@ ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <GeistProvider>
       <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         <RouterProvider router={router} />
       </QueryClientProvider>
     </GeistProvider>
