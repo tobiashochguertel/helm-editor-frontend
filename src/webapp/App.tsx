@@ -78,7 +78,7 @@ function App() {
     setCode(filesAndContent.get(selectedFile));
   }, [files, filesAndContent, filesContentLoaded, filesTree.length, selectedFile, setFilesAndContent]);
 
-  function onChange(newValue) {
+  function onChange(newValue, e) {
     TemplateOutput(filesAndContent, newValue)
       .then((output) => setOutput(output));
 
@@ -106,7 +106,7 @@ function App() {
   return (
     <>
       <header className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-        <a className="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">Company name</a>
+        <a className="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">TH. Helm Chart Playground</a>
       </header>
 
       <Container fluid className="">
