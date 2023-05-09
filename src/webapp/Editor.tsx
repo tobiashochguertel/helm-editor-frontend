@@ -8,7 +8,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 type Props = {
   input: string | undefined,
   output: string | undefined,
-  onChange?: (newValue: any, e: any) => void,
+  onChange?: (newValue: unknown, e: unknown) => void,
   selectedFile?: string,
 }
 
@@ -16,7 +16,7 @@ function Editor(
   {
     input,
     output,
-    onChange = (newValue: any, e: any) => {
+    onChange = (newValue: unknown, e: unknown) => {
       console.debug("newValue", newValue);
       console.debug("e", e);
     },
@@ -26,7 +26,7 @@ function Editor(
   const language_editor = "yaml";
   const language_render = "yaml";
 
-  function handleEditorChange(value, event) {
+  function handleEditorChange(value: unknown, event: unknown) {
     onChange(value, event);
   }
 
