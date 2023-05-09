@@ -61,21 +61,21 @@ function App() {
   }, [files, filesAndContent, filesContentLoaded, filesTree, isFileChange, selectedFile]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function onChange(newValue: string, _e: unknown) {
-    TemplateOutput(filesAndContent, newValue)
+  function onChange(newValue: unknown, _e: unknown) {
+    TemplateOutput(filesAndContent, newValue as string)
       .then((output) => setOutput(output));
 
     const requestOptions = {
       method: 'PUT',
       headers: { 'Content-Type': 'text/plain' },
-      body: newValue
+      body: newValue as string
     };
 
     console.debug("onChange.isFileChange", isFileChange);
     if (isFileChange === false) {
       fetch(`/api/file/${replaceSlash(selectedFile)}`, requestOptions)
         .then(response => response.text())
-        .then(() => filesAndContent.set(selectedFile, newValue))
+        .then(() => filesAndContent.set(selectedFile, newValue as string))
     }
   }
 
