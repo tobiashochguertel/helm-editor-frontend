@@ -54,7 +54,7 @@ function Editor(
   const language_render = "yaml";
   const height = "700px"
 
-  function editorDidMount(editor) {
+  function editorDidMount(editor: { focus: () => void; }) {
     editor.focus();
   }
 
@@ -72,6 +72,8 @@ function Editor(
             onChange={onChange}
             language={language_editor}
             value={input}
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore:
             options={options}
           />
         </Col>
@@ -81,6 +83,8 @@ function Editor(
             height={height}
             language={language_render}
             value={output}
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore:
             options={{ ...options, readOnly: true }}
           />
         </Col>

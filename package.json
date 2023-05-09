@@ -10,7 +10,7 @@
     "dev": "yarn run build:wasm && yarn run build:wasm-exec && REACT_APP_WASM_SIZE=$(wc -c <'./public/main.wasm') vite",
     "build": "REACT_APP_WASM_SIZE=$(wc -c <'./public/main.wasm') tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview --host"
   },
   "dependencies": {
     "@geist-ui/core": "^2.3.8",
@@ -19,6 +19,7 @@
     "@types/golang-wasm-exec": "^1.15.0",
     "@uiw/react-monacoeditor": "^3.5.8",
     "bootstrap": "^5.2.3",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "feather-icons": "^4.29.0",
     "localforage": "^1.10.0",
@@ -33,6 +34,7 @@
     "sort-by": "^1.2.0"
   },
   "devDependencies": {
+    "@types/node": "^20.1.0",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@typescript-eslint/eslint-plugin": "^5.57.1",

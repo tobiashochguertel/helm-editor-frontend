@@ -1,0 +1,1 @@
+podman build --format docker --tag th-helm-playground-webapp .

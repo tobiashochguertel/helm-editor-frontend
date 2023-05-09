@@ -74,10 +74,10 @@ function App() {
 
     getFiles();
 
-    setCode(filesAndContent.get(selectedFile));
+    setCode(filesAndContent.get(selectedFile) || "");
   }, [files, filesAndContent, filesContentLoaded, filesTree.length, selectedFile, setFilesAndContent]);
 
-  function onChange(newValue, e) {
+  function onChange(newValue: string) {
     TemplateOutput(filesAndContent, newValue)
       .then((output) => setOutput(output));
 

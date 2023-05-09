@@ -33,38 +33,42 @@ export default async function helmChartTemplateOutput(
   }
 
   const filesToRender: { [key: string]: string } = {};
-  filesAndContent.forEach((value, key) => {
-    if (key === "values.yaml") return;
-    if (key === "templates") return;
-    if (key === "charts") return;
-    if (key === "Chart.yaml") return;
-    if (key === "README.md") return;
-    if (key === "templates/NOTES.txt") return;
-    if (key === "templates/worker-deployment.yaml") return;
-    if (key === "templates/service.yaml") return;
-    if (key === "templates/service-account.yaml") return;
-    if (key === "templates/redirect.yaml") return;
-    if (key === "templates/pvc.yaml") return;
-    if (key === "templates/postgres-instance.yaml") return;
-    if (key === "templates/pdb.yaml") return;
-    if (key === "templates/network-policy.yaml") return;
-    if (key === "templates/ingress.yaml") return;
-    if (key === "templates/https-ingress-route.yaml") return;
-    if (key === "templates/http-ingress-route.yaml") return;
-    if (key === "templates/hpa.yaml") return;
-    if (key === "templates/deployment.yaml") return;
-    if (key === "templates/db-migrate-hook.yaml") return;
-    if (key === "templates/db-initialize-job.yaml") return;
-    if (key === "templates/cronjob.yaml") return;
-    if (key === ".helmignore") return;
-    if (key === ".dockerignore") return;
-    // if (key === "templates/_ingress-annotations.yaml") return;
-    // if (key === "templates/_helpers.tpl") return;
+  /*   filesAndContent.forEach((value, key) => {
+      if (key === "values.yaml") return;
+      if (key === "templates") return;
+      if (key === "charts") return;
+      if (key === "Chart.yaml") return;
+      if (key === "README.md") return;
+      if (key === "templates/NOTES.txt") return;
+      if (key === "templates/worker-deployment.yaml") return;
+      if (key === "templates/service.yaml") return;
+      if (key === "templates/service-account.yaml") return;
+      if (key === "templates/redirect.yaml") return;
+      if (key === "templates/pvc.yaml") return;
+      if (key === "templates/postgres-instance.yaml") return;
+      if (key === "templates/pdb.yaml") return;
+      if (key === "templates/network-policy.yaml") return;
+      if (key === "templates/ingress.yaml") return;
+      if (key === "templates/https-ingress-route.yaml") return;
+      if (key === "templates/http-ingress-route.yaml") return;
+      if (key === "templates/hpa.yaml") return;
+      if (key === "templates/deployment.yaml") return;
+      if (key === "templates/db-migrate-hook.yaml") return;
+      if (key === "templates/db-initialize-job.yaml") return;
+      if (key === "templates/cronjob.yaml") return;
+      if (key === ".helmignore") return;
+      if (key === ".dockerignore") return;
+      // if (key === "templates/_ingress-annotations.yaml") return;
+      // if (key === "templates/_helpers.tpl") return;
+  
+      // Show the loaded Chart Files, which are loaded additional to the selected template file:
+      // console.debug("key", key)
+      filesToRender[key] = value
+    }); */
 
-    // Show the loaded Chart Files, which are loaded additional to the selected template file:
-    // console.debug("key", key)
-    filesToRender[key] = value
-  });
+
+  filesToRender['templates/_ingress-annotations.yaml'] = filesAndContent.get('templates/_ingress-annotations.yaml') || "";
+  filesToRender['templates/_helpers.tpl'] = filesAndContent.get('templates/_helpers.tpl') || "";
 
   if (template !== undefined) {
     // filesToRender['template'] = filesAndContent.get(template) || "";
