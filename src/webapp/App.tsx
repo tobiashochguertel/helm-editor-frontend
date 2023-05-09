@@ -118,9 +118,9 @@ function App() {
                 </a>
               </h6>
               <Tree
-                // key={selectedFile}
                 onClick={handler}
                 value={filesTree}
+                initialExpand={true}
               />
             </div>
           </nav>
