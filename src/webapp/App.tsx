@@ -1,35 +1,11 @@
 import { Container, Row } from 'react-bootstrap';
 import { PlusCircle } from 'react-feather';
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { Tree, useToasts } from '@geist-ui/core'
 import TemplateOutput from './TemplateOutput';
 import Editor from './Editor';
-
-function replaceSlash(filename: string) {
-  const SLASH = '%2F';
-
-  if (filename.indexOf("/") > -1) {
-    filename = filename.replace("/", SLASH);
-  }
-  return filename;
-}
-
-type FileContent = {
-  fielname: string,
-  content: string
-}
-
-async function getContent(filename: string): Promise<FileContent> {
-  // http://localhost:5173/api/file/templates%2Fworker-deployment.yaml
-  filename = replaceSlash(filename);
-
-  const data = await (
-    await fetch(`/api/file/${filename}`)
-  ).json();
-  return data;
-
-
-}
+import { getContent, replaceSlash } from './getContent';
+import { color, log, red, green, cyan, cyanBright, yellow } from 'console-log-colors';
 
 function App() {
   const { setToast } = useToasts()
@@ -38,6 +14,7 @@ function App() {
   const [code, setCode] = useState<string>("");
   const [selectedFile, setSelectedFile] = useState("");
   const [filesTree, setFilesTree] = useState([]);
+  const [isFileChange, setIsFileChange] = useState(false);
 
   const [files, setFiles] = useState<string[]>(new Array<string>());
   const [filesAndContent, setFilesAndContent] = useState<Map<string, string>>(new Map<string, string>());
@@ -74,10 +51,19 @@ function App() {
 
     getFiles();
 
-    setCode(filesAndContent.get(selectedFile) || "");
-  }, [files, filesAndContent, filesContentLoaded, filesTree.length, selectedFile, setFilesAndContent]);
+    console.debug("useEffect.isFileChange", isFileChange);
+    if (isFileChange === true) {
+      const code = filesAndContent.get(selectedFile) || "";
+      setCode(code);
+      TemplateOutput(filesAndContent, code)
+        .then((output) => setOutput(output));
+      setIsFileChange(false);
+    }
 
-  function onChange(newValue: string) {
+  }, [files, filesAndContent, filesContentLoaded, filesTree, isFileChange, selectedFile]);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  function onChange(newValue: string, _e: unknown) {
     TemplateOutput(filesAndContent, newValue)
       .then((output) => setOutput(output));
 
@@ -86,15 +72,23 @@ function App() {
       headers: { 'Content-Type': 'text/plain' },
       body: newValue
     };
-    fetch(`/api/file/${replaceSlash(selectedFile)}`, requestOptions)
-      .then(response => response.text())
-      .then(() => filesAndContent.set(selectedFile, newValue))
-    // .then(() => console.debug("filesAndContent.get(selectedFile)", filesAndContent.get(selectedFile)));
+
+    console.debug("onChange.isFileChange", isFileChange);
+    if (isFileChange === false) {
+      console.debug("selectedFile", selectedFile);
+      // console.debug("newValue", newValue.substring(0, 25));
+
+      fetch(`/api/file/${replaceSlash(selectedFile)}`, requestOptions)
+        .then(response => response.text())
+        .then(() => filesAndContent.set(selectedFile, newValue))
+      // .then(() => console.debug("filesAndContent.get(selectedFile)", filesAndContent.get(selectedFile)));
+    }
   }
 
   const handler = (path: string) => {
     setToast({ text: path })
     if (selectedFile !== path) {
+      setIsFileChange(true);
       setSelectedFile(path);
     }
   }
@@ -130,6 +124,7 @@ function App() {
                 </a>
               </h6>
               <Tree
+                // key={selectedFile}
                 onClick={handler}
                 value={filesTree}
               />
@@ -137,13 +132,12 @@ function App() {
           </nav>
 
           <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <Editor
-              key={selectedFile}
+            {selectedFile && <Editor
               input={code}
               output={output}
               onChange={onChange}
               selectedFile={selectedFile}
-            />
+            />}
           </main>
 
         </Row>

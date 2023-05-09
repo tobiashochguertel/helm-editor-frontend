@@ -71,7 +71,6 @@ export default async function helmChartTemplateOutput(
   filesToRender['templates/_helpers.tpl'] = filesAndContent.get('templates/_helpers.tpl') || "";
 
   if (template !== undefined) {
-    // filesToRender['template'] = filesAndContent.get(template) || "";
     filesToRender['template'] = template || "";
   }
 
@@ -82,7 +81,5 @@ export default async function helmChartTemplateOutput(
     filesAndContent.get('Chart.yaml'),
     getSettingsObject()
   );
-  // console.debug("result", result);
-
   return result.result;
 }
