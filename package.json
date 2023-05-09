@@ -24,6 +24,8 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "feather-icons": "^4.29.0",
+    "gray-matter": "^4.0.3",
+    "js-yaml": "^4.1.0",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
     "nodemon": "^2.0.22",
@@ -36,6 +38,7 @@
     "sort-by": "^1.2.0"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.5",
     "@types/node": "^20.1.0",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",

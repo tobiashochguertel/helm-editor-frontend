@@ -5,6 +5,11 @@ import { Tree, useToasts } from '@geist-ui/core'
 import TemplateOutput from './TemplateOutput';
 import Editor from './Editor';
 import { getContent, replaceSlash } from './getContent';
+import MyConfiguration from './MyConfiguration';
+
+function isEmpty(array: Array<unknown>) {
+  return array.length === 0;
+}
 
 function App() {
   const { setToast } = useToasts()
@@ -19,9 +24,11 @@ function App() {
   const [filesAndContent, setFilesAndContent] = useState<Map<string, string>>(new Map<string, string>());
   const [filesContentLoaded, setFilesContentLoaded] = useState(false);
 
+  const [myConfig, setMyConfig] = useState("");
+
   useEffect(() => {
     async function getFiles() {
-      if (files.length == 0) return;
+      if (isEmpty(files)) return;
       if (filesContentLoaded === true) return;
 
       await Promise.all(files.map(async (file) => {
@@ -38,12 +45,12 @@ function App() {
       });
     }
 
-    if (files.length === 0)
+    if (isEmpty(files))
       fetch(`/api/list`).then(response => response.json()).then((data) => {
         setFiles(data);
       });
 
-    if (filesTree.length === 0)
+    if (isEmpty(filesTree))
       fetch(`/api/tree`).then(response => response.json()).then((data) => {
         setFilesTree(data);
       });
@@ -53,16 +60,16 @@ function App() {
     if (isFileChange === true) {
       const code = filesAndContent.get(selectedFile) || "";
       setCode(code);
-      TemplateOutput(filesAndContent, code)
+      TemplateOutput(filesAndContent, code, myConfig)
         .then((output) => setOutput(output));
       setIsFileChange(false);
     }
 
-  }, [files, filesAndContent, filesContentLoaded, filesTree, isFileChange, selectedFile]);
+  }, [files, filesAndContent, filesContentLoaded, filesTree, isFileChange, myConfig, selectedFile]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function onChange(newValue: unknown, _e: unknown) {
-    TemplateOutput(filesAndContent, newValue as string)
+    TemplateOutput(filesAndContent, newValue as string, myConfig)
       .then((output) => setOutput(output));
 
     const requestOptions = {
@@ -71,7 +78,6 @@ function App() {
       body: newValue as string
     };
 
-    console.debug("onChange.isFileChange", isFileChange);
     if (isFileChange === false) {
       fetch(`/api/file/${replaceSlash(selectedFile)}`, requestOptions)
         .then(response => response.text())
@@ -85,6 +91,12 @@ function App() {
       setIsFileChange(true);
       setSelectedFile(path);
     }
+  }
+
+  const myConfigurationChangeHandler = (newValue: string) => {
+    setMyConfig(newValue);
+    TemplateOutput(filesAndContent, code, newValue)
+      .then((output) => setOutput(output));
   }
 
   if (files.length === 0) return (<>'No Files available...'</>)
@@ -106,6 +118,13 @@ function App() {
                     <span data-feather="home" className="align-text-bottom"></span>
                     Dashboard
                   </a>
+                </li>
+                <li className="nav-item">
+                  <MyConfiguration
+                    name={"Set Configuration Values"}
+                    filesAndContent={filesAndContent}
+                    onChange={myConfigurationChangeHandler}
+                  />
                 </li>
               </ul>
 

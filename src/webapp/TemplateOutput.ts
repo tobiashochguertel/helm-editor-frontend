@@ -1,4 +1,6 @@
 import Renderer from './Renderer';
+// import * as matter from 'gray-matter';
+import * as jsYaml from 'js-yaml';
 
 import { defaultKubernetesVersion } from "./Settings/kubernetesVersions"
 
@@ -8,6 +10,7 @@ export type Filecontent = string;
 export default async function helmChartTemplateOutput(
   filesAndContent: Map<Filename, Filecontent>,
   template: string,
+  myValuesOverride?: string,
 ) {
 
   const getSettingsObject = () => {
@@ -74,12 +77,25 @@ export default async function helmChartTemplateOutput(
     filesToRender['template'] = template || "";
   }
 
+  let valuesYaml = filesAndContent.get('values.yaml');
+  if (myValuesOverride !== undefined) {
+    const myConfigJson: object = jsYaml.load(myValuesOverride) as object;
+    const chartConfigJson: object = jsYaml.load(filesAndContent.get('values.yaml') || "") as object;
+    const mergedConfig: object = { ...chartConfigJson, ...myConfigJson };
+    valuesYaml = jsYaml.dump(mergedConfig)
+
+    console.debug("mergedConfig", mergedConfig);
+  }
+
   const renderer = await Renderer;
   const result = renderer(
     JSON.stringify(filesToRender),
-    filesAndContent.get('values.yaml'),
+    valuesYaml, // filesAndContent.get('values.yaml')
     filesAndContent.get('Chart.yaml'),
     getSettingsObject()
   );
+
+  console.debug("result", result);
+
   return result.result;
 }

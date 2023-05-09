@@ -33,9 +33,6 @@ function Editor(
   return (
     <Container fluid>
       <Row>
-        {/* <Col>
-        <h6>Values</h6>
-      </Col> */}
         <Col>
           <h6>Selected File: {selectedFile}</h6>
           <MonacoEditor
