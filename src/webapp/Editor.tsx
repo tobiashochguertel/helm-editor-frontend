@@ -49,10 +49,10 @@ function Editor(
         <Col>
           <h6>Render Output</h6>
           <MonacoEditor
-            key={output}
             height="90vh"
             defaultLanguage={language_render}
             defaultValue={output}
+            value={output}
             options={{
               readOnly: true,
             }}
