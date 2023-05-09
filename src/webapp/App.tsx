@@ -1,11 +1,10 @@
 import { Container, Row } from 'react-bootstrap';
 import { PlusCircle } from 'react-feather';
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Tree, useToasts } from '@geist-ui/core'
 import TemplateOutput from './TemplateOutput';
 import Editor from './Editor';
 import { getContent, replaceSlash } from './getContent';
-import { color, log, red, green, cyan, cyanBright, yellow } from 'console-log-colors';
 
 function App() {
   const { setToast } = useToasts()
@@ -51,7 +50,6 @@ function App() {
 
     getFiles();
 
-    console.debug("useEffect.isFileChange", isFileChange);
     if (isFileChange === true) {
       const code = filesAndContent.get(selectedFile) || "";
       setCode(code);
@@ -75,13 +73,9 @@ function App() {
 
     console.debug("onChange.isFileChange", isFileChange);
     if (isFileChange === false) {
-      console.debug("selectedFile", selectedFile);
-      // console.debug("newValue", newValue.substring(0, 25));
-
       fetch(`/api/file/${replaceSlash(selectedFile)}`, requestOptions)
         .then(response => response.text())
         .then(() => filesAndContent.set(selectedFile, newValue))
-      // .then(() => console.debug("filesAndContent.get(selectedFile)", filesAndContent.get(selectedFile)));
     }
   }
 
