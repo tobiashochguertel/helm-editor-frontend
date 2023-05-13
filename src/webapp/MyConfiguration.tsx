@@ -2,19 +2,19 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import { Editor as MonacoEditor } from '@monaco-editor/react';
 
 import './SetConfigurationValuesMenu.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, ButtonGroup, Col, Container, Row } from 'react-bootstrap';
-import { Filecontent, Filename } from './TemplateOutput';
+import { Content } from './TemplateOutput';
 
 type OffCanvasProps = {
   name: string | undefined,
-  filesAndContent: Map<Filename, Filecontent>,
+  chart: Map<string, Content>,
   onChange?: (newValue: string) => void,
 }
 
-const LOCAL_STORAGE_KEY = 'my-configuration'
+export const LOCAL_STORAGE_KEY = 'my-configuration'
 
-export default function MyConfiguration({ name, filesAndContent, onChange }: OffCanvasProps) {
+export default function MyConfiguration({ name, chart, onChange }: OffCanvasProps) {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const toggleShow = () => setShow((s) => !s);
@@ -24,7 +24,7 @@ export default function MyConfiguration({ name, filesAndContent, onChange }: Off
   const loadFromValuesYaml = (event: unknown) => {
     event.stopPropagation();
 
-    const cfg: string = filesAndContent.get('values.yaml') || "";
+    const cfg: string = chart.get('values.yaml')?.content || "";
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(cfg));
     setMyConfig(cfg);
     if (onChange !== undefined && typeof onChange === 'function') onChange(cfg);
@@ -35,6 +35,10 @@ export default function MyConfiguration({ name, filesAndContent, onChange }: Off
     setMyConfig(newValue);
     if (onChange !== undefined && typeof onChange === 'function') onChange(newValue);
   }
+
+  useEffect(() => {
+    // console.debug("Loaded!!!");
+  }, []);
 
   return (
     <>

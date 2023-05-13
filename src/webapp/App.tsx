@@ -2,12 +2,13 @@ import { Container, Row } from 'react-bootstrap';
 import { PlusCircle } from 'react-feather';
 import { useEffect, useState } from 'react';
 import { Tree, useToasts } from '@geist-ui/core'
-import TemplateOutput from './TemplateOutput';
+import TemplateOutput, { Content } from './TemplateOutput';
 import Editor from './Editor';
 import { getContent, replaceSlash } from './getContent';
-import MyConfiguration from './MyConfiguration';
+import MyConfiguration, { LOCAL_STORAGE_KEY } from './MyConfiguration';
 
-function isEmpty(array: Array<unknown>) {
+function isEmpty(array: Array<unknown> | Map<unknown, unknown>) {
+  if (array instanceof Map) return array.size === 0;
   return array.length === 0;
 }
 
@@ -15,61 +16,54 @@ function App() {
   const { setToast } = useToasts()
 
   const [output, setOutput] = useState<string>("");
-  const [code, setCode] = useState<string>("");
+  const [code, setCode] = useState<Content>({ filename: '', content: '', type: 'file' } as Content);
   const [selectedFile, setSelectedFile] = useState("");
   const [filesTree, setFilesTree] = useState([]);
   const [isFileChange, setIsFileChange] = useState(false);
 
-  const [files, setFiles] = useState<string[]>(new Array<string>());
-  const [filesAndContent, setFilesAndContent] = useState<Map<string, string>>(new Map<string, string>());
-  const [filesContentLoaded, setFilesContentLoaded] = useState(false);
+  const [chart, setChart] = useState<Map<string, Content>>(new Map<string, Content>());
+  const [chartLoaded, setChartLoaded] = useState(false);
 
-  const [myConfig, setMyConfig] = useState("");
+  const [myConfig, setMyConfig] = useState(JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || "");
 
   useEffect(() => {
-    async function getFiles() {
-      if (isEmpty(files)) return;
-      if (filesContentLoaded === true) return;
-
-      await Promise.all(files.map(async (file) => {
-        return await getContent(file);
-      })).then((filesContent) => {
-
-        const filesAndContent = new Map<string, string>();
-        for (const { fielname, content } of filesContent) {
-          filesAndContent.set(fielname, content);
+    if (isEmpty(chart)) {
+      fetch(`/api/chart`).then(response => response.json()).then((data) => {
+        // https://www.cloudhadoop.com/2018/09/typescript-how-to-convert-map-tofrom.html
+        const map = new Map<string, Content>();
+        for (const value in data) {
+          map.set(value, data[value]);
         }
-
-        setFilesAndContent(filesAndContent);
-        setFilesContentLoaded(true);
+        setChart(map);
+        setChartLoaded(true);
       });
     }
-
-    if (isEmpty(files))
-      fetch(`/api/list`).then(response => response.json()).then((data) => {
-        setFiles(data);
-      });
-
-    if (isEmpty(filesTree))
+    if (isEmpty(filesTree)) {
       fetch(`/api/tree`).then(response => response.json()).then((data) => {
         setFilesTree(data);
       });
-
-    getFiles();
-
+    }
     if (isFileChange === true) {
-      const code = filesAndContent.get(selectedFile) || "";
+      const code: Content = {
+        filename: selectedFile,
+        content: chart.get(selectedFile)?.content || "",
+        type: "file"
+      }
       setCode(code);
-      TemplateOutput(filesAndContent, code, myConfig)
+      TemplateOutput(chart, code, myConfig)
         .then((output) => setOutput(output));
       setIsFileChange(false);
     }
-
-  }, [files, filesAndContent, filesContentLoaded, filesTree, isFileChange, myConfig, selectedFile]);
+  }, [chart, filesTree, isFileChange, myConfig, selectedFile]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function onChange(newValue: unknown, _e: unknown) {
-    TemplateOutput(filesAndContent, newValue as string, myConfig)
+    const code: Content = {
+      filename: selectedFile,
+      content: newValue as string,
+      type: "file"
+    }
+    TemplateOutput(chart, code, myConfig)
       .then((output) => setOutput(output));
 
     const requestOptions = {
@@ -81,7 +75,11 @@ function App() {
     if (isFileChange === false) {
       fetch(`/api/file/${replaceSlash(selectedFile)}`, requestOptions)
         .then(response => response.text())
-        .then(() => filesAndContent.set(selectedFile, newValue as string))
+        .then(() => {
+          const currentValue: Content = chart.get(selectedFile) || { filename: selectedFile, content: "", type: "file" } as Content;
+          currentValue.content = newValue as string;
+          chart.set(selectedFile, currentValue)
+        })
     }
   }
 
@@ -95,12 +93,12 @@ function App() {
 
   const myConfigurationChangeHandler = (newValue: string) => {
     setMyConfig(newValue);
-    TemplateOutput(filesAndContent, code, newValue)
+    TemplateOutput(chart, code, newValue)
       .then((output) => setOutput(output));
   }
 
-  if (files.length === 0) return (<>'No Files available...'</>)
-  if (filesContentLoaded === false) return (<>'Files Content not yet loaded...'</>)
+  if (chart.size === 0) return (<>'No Files available... or backend not available?'</>)
+  if (chartLoaded === false) return (<>'Files Content not yet loaded...'</>)
 
   return (
     <>
@@ -122,7 +120,7 @@ function App() {
                 <li className="nav-item">
                   <MyConfiguration
                     name={"Set Configuration Values"}
-                    filesAndContent={filesAndContent}
+                    chart={chart}
                     onChange={myConfigurationChangeHandler}
                   />
                 </li>
@@ -146,7 +144,7 @@ function App() {
 
           <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             {selectedFile && <Editor
-              input={code}
+              input={code.content}
               output={output}
               onChange={onChange}
               selectedFile={selectedFile}

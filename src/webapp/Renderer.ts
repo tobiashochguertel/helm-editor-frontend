@@ -10,3 +10,4 @@ export default WebAssembly.instantiateStreaming(
 }).catch((err: Error) => {
   console.error('webassembly instantiate error', err)
 });
+

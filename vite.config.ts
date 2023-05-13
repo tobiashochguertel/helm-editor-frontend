@@ -7,7 +7,9 @@ import monacoEditorPlugin from 'vite-plugin-monaco-editor';
 
 const {
   BACKEND_PORT = 3001,
-  BACKEND_HOSTNAME = 'localhost'
+  BACKEND_HOSTNAME = 'localhost',
+  BACKEND_TEMPLATE_HOSTNAME = 'localhost',
+  BACKEND_TEMPLATE_PORT = 3002,
 } = process.env;
 
 // https://vitejs.dev/config/
@@ -26,6 +28,12 @@ export default defineConfig({
         autoRewrite: true,
         // rewrite: (path) => path.replace(/^\/api/, ''),
       },
+      '/template': {
+        target: `http://${BACKEND_TEMPLATE_HOSTNAME}:${BACKEND_TEMPLATE_PORT}/`,
+        changeOrigin: false,
+        autoRewrite: true,
+        // rewrite: (path) => path.replace(/^\/api/, ''),
+      }
     },
   },
 })
