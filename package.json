@@ -4,11 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "build:wasm": "cd src/renderer/pkg/playground && GOOS=js GOARCH=wasm go build -ldflags='-s -w' -o ../../../../public/main.wasm",
-    "build:wasm-exec": "cat $(go env GOROOT)/misc/wasm/wasm_exec.js > public/wasm_exec.js",
-    "build:wasm-big": "cd src/renderer/pkg/render && GOOS=js GOARCH=wasm go build  -o ../../../../public/main-big.wasm",
-    "dev": "yarn run build:wasm && yarn run build:wasm-exec && REACT_APP_WASM_SIZE=$(wc -c <'./public/main.wasm') vite",
-    "build": "REACT_APP_WASM_SIZE=$(wc -c <'./public/main.wasm') tsc && vite build",
+    "dev": "vite",
+    "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview --host"
   },
