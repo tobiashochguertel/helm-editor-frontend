@@ -3,7 +3,6 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'feather-icons/dist/feather.js'
 import './assets/grid.css'
 import './assets/dashboard.css'
-import './assets/wasm_exec.js'
 
 import React from 'react'
 import ReactDOM from 'react-dom/client'
