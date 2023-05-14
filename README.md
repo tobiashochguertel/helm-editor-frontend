@@ -89,3 +89,7 @@ to provide a chart to the Helm Chart Playground, use the `volume` mount option o
 
 Each change of a file in the editor is automatically written back to the file in the mounted directory, there is now Save button or similar. Also no function in the editor to create a new file. If you want to add a new file, then please use the shell or Filesystem Browser, and refresh the editor with `F5` to see the new file in the editor's file and directory list on the left side.
 
+## Related Repositories
+
+- [th-helm-playground-backend](https://github.com/tobiashochguertel/th-helm-playground-backend) -  Provides the Files and content for the frontend (~left side).
+- [th-helm-playground-template](https://github.com/tobiashochguertel/th-helm-playground-template) - Renderer, returns the content for the right side of the editor.
