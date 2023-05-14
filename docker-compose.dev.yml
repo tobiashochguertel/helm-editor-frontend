@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   backend:
-    image: docker.io/tobiashochguertel/th-helm-playground-backend:latest
+    image: localhost/th-helm-playground-backend:latest
     ports:
       - '3001:3001'
     volumes:
@@ -9,13 +9,13 @@ services:
     environment:
       - PORT=3001
   template:
-    image: docker.io/tobiashochguertel/th-helm-playground-template:latest
+    image: localhost/th-helm-playground-template:latest
     ports:
       - '3002:3002'
     environment:
       - PORT=3002
   webapp:
-    image: docker.io/tobiashochguertel/th-helm-playground-frontend:latest
+    image: localhost/th-helm-playground-webapp:latest
     ports:
       - '4173:4173'
     environment:
