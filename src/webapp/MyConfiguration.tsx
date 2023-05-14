@@ -19,9 +19,13 @@ export default function MyConfiguration({ name, chart, onChange }: OffCanvasProp
   const handleClose = () => setShow(false);
   const toggleShow = () => setShow((s) => !s);
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const [myConfig, setMyConfig] = useState(JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || "");
 
   const loadFromValuesYaml = (event: unknown) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     event.stopPropagation();
 
     const cfg: string = chart.get('values.yaml')?.content || "";
@@ -72,6 +76,8 @@ export default function MyConfiguration({ name, chart, onChange }: OffCanvasProp
             defaultLanguage="yaml"
             // defaultValue={myConfig}
             value={myConfig}
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore 
             onChange={myConfigChangeHandler}
             options={{
               readOnly: false,

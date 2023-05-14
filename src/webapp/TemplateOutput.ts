@@ -1,7 +1,5 @@
 import * as jsYaml from 'js-yaml';
 
-import { defaultKubernetesVersion } from "./Settings/kubernetesVersions"
-
 export type Filename = string;
 export type Filecontent = string;
 
@@ -16,28 +14,6 @@ export default async function helmChartTemplateOutput(
   template: Content,
   myValuesOverride?: string,
 ) {
-
-  const getSettingsObject = () => {
-    return {
-      release: {
-        name: 'sample',
-        namespace: 'default',
-        isUpgrade: "false",
-        isInstall: "false",
-        revision: "1",
-        service: 'Helm',
-      },
-      kubeVersion: {
-        version: defaultKubernetesVersion,
-      },
-      helmVersion: {
-        version: "v3.7.2",
-        gitCommit: "663a896f4a815053445eec4153677ddc24a0a361",
-        gitTreeState: "clean",
-        goVersion: "go1.17.3",
-      },
-    }
-  }
 
   let valuesYaml: string = chart.get('values.yaml')?.content || "";
   if (myValuesOverride !== undefined) {

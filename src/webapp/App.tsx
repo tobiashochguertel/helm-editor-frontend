@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Tree, useToasts } from '@geist-ui/core'
 import TemplateOutput, { Content } from './TemplateOutput';
 import Editor from './Editor';
-import { getContent, replaceSlash } from './getContent';
+import { replaceSlash } from './getContent';
 import MyConfiguration, { LOCAL_STORAGE_KEY } from './MyConfiguration';
 
 function isEmpty(array: Array<unknown> | Map<unknown, unknown>) {
@@ -24,6 +24,8 @@ function App() {
   const [chart, setChart] = useState<Map<string, Content>>(new Map<string, Content>());
   const [chartLoaded, setChartLoaded] = useState(false);
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const [myConfig, setMyConfig] = useState(JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || "");
 
   useEffect(() => {
