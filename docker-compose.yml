@@ -1,0 +1,25 @@
+version: '3.5'
+services:
+  backend:
+    image: localhost/th-helm-playground-backend:latest
+    ports:
+      - '3001:3001'
+    volumes:
+      - ./gitlab-project:/app/public
+    environment:
+      - PORT=3001
+  template:
+    image: localhost/th-helm-playground-template:latest
+    ports:
+      - '3002:3002'
+    environment:
+      - PORT=3002
+  webapp:
+    image: localhost/th-helm-playground-webapp:latest
+    ports:
+      - '4173:4173'
+    environment:
+      - BACKEND_PORT=3001
+      - BACKEND_HOSTNAME=backend
+      - BACKEND_TEMPLATE_HOSTNAME=template
+      - BACKEND_TEMPLATE_PORT=3002
