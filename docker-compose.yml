@@ -5,7 +5,7 @@ services:
     ports:
       - '3001:3001'
     volumes:
-      - ./gitlab-project:/app/public
+      - ./../gitlab-project:/app/public
     environment:
       - PORT=3001
   template:
