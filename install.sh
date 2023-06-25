@@ -1,7 +1,7 @@
 #!/bin/bash
 
 mkdir -p ~/bin
-curl -sSLf https://raw.githubusercontent.com/tobiashochguertel/helm-editor-frontend/main/edit-chart > "$HOME"/bin/edit-chart
+curl -sSLf https://raw.githubusercontent.com/tobiashochguertel/helm-editor-frontend/main/edit-chart > "$HOME"/bin/edit-chart && chmod +x "$HOME"/bin/edit-chart
 curl -sSLf https://raw.githubusercontent.com/tobiashochguertel/helm-editor-frontend/main/docker-compose.yml > "$HOME"/bin/edit-chart.docker-compose.yml
 
 # Dasel
