@@ -1,4 +1,5 @@
 version: '3.5'
+
 services:
   backend:
     image: localhost/th-helm-playground-backend:latest
