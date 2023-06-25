@@ -7,6 +7,8 @@ CURRENT_PATH="$(pwd)"
 # cat "$COMPOSE_FILE"
 docker-compose -f "$COMPOSE_FILE" up -d
 
+sleep 1
+
 echo ""
 echo "open http://localhost:4173"
 echo ""
