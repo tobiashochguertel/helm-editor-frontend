@@ -19,9 +19,25 @@ But they had some limitations like:
 
 ## Setup
 
+### Shell, `edit-chart` command
+
+The idea behind the `edit-chart` command is to quickly start editing a chart from the command line. the `edit-chart` command (script) changes the volume mount source in the docker-compose file and restarts the container to apply the changes.
+
+```bash
+curl -sSLf https://raw.githubusercontent.com/tobiashochguertel/helm-editor-frontend/main/install.sh | bash
+```
+
+**Usage:**
+
+```bash
+cd path-to-my-chart && edit-chart && open http://localhost:4173
+```
+
+### Docker-Compose
+
 See [docker-compose.yml](docker-compose.yml) for how to setup and configure this project.
 
-**Example docker-compose.yml:**
+**Example: `docker-compose.yml`**
 
 ```yaml
 version: '3.5'
