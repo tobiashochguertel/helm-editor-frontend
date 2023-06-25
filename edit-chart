@@ -1,0 +1,8 @@
+#!/bin/bash
+
+COMPOSE_FILE="$HOME/bin/edit-chart.docker-compose.yml"
+CURRENT_PATH="$(pwd)"
+
+"$HOME"/bin/dasel put -f "$COMPOSE_FILE" -s 'services.backend.volumes.index(0)' -v "$CURRENT_PATH:/app/public"
+# cat "$COMPOSE_FILE"
+docker-compose -f "$COMPOSE_FILE" up -d

@@ -28,16 +28,13 @@ version: '3.5'
 services:
   backend:
     image: docker.io/tobiashochguertel/th-helm-playground-backend:latest
-    ports:
-      - '3001:3001'
     volumes:
       - ./../gitlab-project:/app/public
+      # - /Users/tobiashochgurtel/work-dev/helm-playground/github/gitlab/charts/gitlab:/app/public
     environment:
       - PORT=3001
   template:
     image: docker.io/tobiashochguertel/th-helm-playground-template:latest
-    ports:
-      - '3002:3002'
     environment:
       - PORT=3002
   webapp:
