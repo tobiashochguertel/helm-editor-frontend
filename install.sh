@@ -1,8 +1,8 @@
 #!/bin/bash
 
 mkdir -p ~/bin
-curl https://raw.githubusercontent.com/tobiashochguertel/helm-editor-frontend/main/edit-chart > ~/bin/edit-chart
-curl https://raw.githubusercontent.com/tobiashochguertel/helm-editor-frontend/main/docker-compose.yml > ~/bin/edit-chart.docker-compose.yml
+curl -sSLf https://raw.githubusercontent.com/tobiashochguertel/helm-editor-frontend/main/edit-chart > ~/bin/edit-chart
+curl -sSLf https://raw.githubusercontent.com/tobiashochguertel/helm-editor-frontend/main/docker-compose.yml > ~/bin/edit-chart.docker-compose.yml
 
 # Dasel
 if [[ $OSTYPE == 'darwin'* ]]; then
