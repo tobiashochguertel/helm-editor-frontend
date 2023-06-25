@@ -6,3 +6,11 @@ CURRENT_PATH="$(pwd)"
 "$HOME"/bin/edit-chart.dasel put -f "$COMPOSE_FILE" -s 'services.backend.volumes.index(0)' -v "$CURRENT_PATH:/app/public"
 # cat "$COMPOSE_FILE"
 docker-compose -f "$COMPOSE_FILE" up -d
+
+echo ""
+echo "open http://localhost:4173"
+echo ""
+
+if [[ $OSTYPE == 'darwin'* ]]; then
+  open http://localhost:4173
+fi
