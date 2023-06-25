@@ -1,4 +1,4 @@
-# TH Helm Chart Playground
+# Helm Chart Editor
 
 I didn't like to edit Helm Charts because to understand how my YAML template file looks rendered wasn't really obvious.
 I thought a split-view editor which has on the left side the template and on the right side the rendered template would help me much when I work with helm charts.
