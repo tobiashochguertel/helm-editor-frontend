@@ -139,7 +139,7 @@ function App() {
               <Tree
                 onClick={handler}
                 value={filesTree}
-                initialExpand={true}
+                initialExpand={false}
               />
             </div>
           </nav>

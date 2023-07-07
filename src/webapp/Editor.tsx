@@ -52,6 +52,7 @@ function Editor(
             value={output}
             options={{
               readOnly: true,
+              wordWrap: "on",//
             }}
           />
         </Col>
