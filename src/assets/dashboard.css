@@ -12,7 +12,7 @@ body {
  */
 
 .sidebar {
-  position: fixed;
+  /* position: fixed; */
   top: 0;
   /* rtl:raw:
   right: 0;
@@ -20,7 +20,7 @@ body {
   bottom: 0;
   /* rtl:remove */
   left: 0;
-  z-index: 100;
+  /* z-index: 100; */
   /* Behind the navbar */
   padding: 48px 0 0;
   /* Height of navbar */

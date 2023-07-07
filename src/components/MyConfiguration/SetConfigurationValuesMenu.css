@@ -1,0 +1,32 @@
+.offcanvas,
+.offcanvas-lg,
+.offcanvas-md,
+.offcanvas-sm,
+.offcanvas-xl,
+.offcanvas-xxl {
+  --bs-offcanvas-zindex: 1045;
+  --bs-offcanvas-z-index: 1045;
+  /* --bs-offcanvas-width: 500px; */
+  --bs-offcanvas-height: 30vh;
+  --bs-offcanvas-padding-x: 1rem;
+  --bs-offcanvas-padding-y: 1rem;
+  --bs-offcanvas-color: ;
+  --bs-offcanvas-bg: #fff;
+  /* --bs-offcanvas-border-width: 1px; */
+  --bs-offcanvas-border-color: var(--bs-border-color-translucent);
+  --bs-offcanvas-box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.resize-handle {
+  position: absolute;
+  width: 13px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  cursor: col-resize;
+  margin: 0 -10px;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+  background-color: #eee;
+  background-repeat: no-repeat;
+  background-position: 50%
+}

@@ -1,10 +1,14 @@
+import React, { useEffect, useState } from 'react';
+
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { Editor as MonacoEditor } from '@monaco-editor/react';
 
 import './SetConfigurationValuesMenu.css';
-import { useEffect, useState } from 'react';
 import { Button, ButtonGroup, Col, Container, Row } from 'react-bootstrap';
-import { Content } from './TemplateOutput';
+import { Content } from '../../TemplateOutput';
+import LOCAL_STORAGE_KEY from './LOCAL_STORAGE_KEY';
+import useResize from '../UseResizeHook/UseResize';
+
 
 type OffCanvasProps = {
   name: string | undefined,
@@ -12,12 +16,12 @@ type OffCanvasProps = {
   onChange?: (newValue: string) => void,
 }
 
-export const LOCAL_STORAGE_KEY = 'my-configuration'
 
 export default function MyConfiguration({ name, chart, onChange }: OffCanvasProps) {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const toggleShow = () => setShow((s) => !s);
+  const { width, enableResize } = useResize({ minWidth: 500 });
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -49,7 +53,7 @@ export default function MyConfiguration({ name, chart, onChange }: OffCanvasProp
       <a href='#' onClick={toggleShow} className="nav-link">
         {name}
       </a>
-      <Offcanvas show={show} onHide={handleClose} scroll={true} backdrop={false}>
+      <Offcanvas show={show} onHide={handleClose} scroll={true} backdrop={false} style={{ width: width }}>
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>My Configuration:</Offcanvas.Title>
         </Offcanvas.Header>
@@ -84,6 +88,11 @@ export default function MyConfiguration({ name, chart, onChange }: OffCanvasProp
             }}
           />
         </Offcanvas.Body>
+
+        <div
+          className='resize-handle'
+          onMouseDown={enableResize}
+        />
       </Offcanvas >
     </>
   );

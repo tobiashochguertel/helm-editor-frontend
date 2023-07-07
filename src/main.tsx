@@ -1,4 +1,3 @@
-// import './userWorker'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'feather-icons/dist/feather.js'
 import './assets/grid.css'
@@ -10,8 +9,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GeistProvider } from '@geist-ui/core'
 
-import ErrorPage from './error-page.tsx'
-import App from './App.tsx'
+import App from './App'
+import ErrorPage from './components/Error/error-page'
 
 const router = createBrowserRouter([
   {
