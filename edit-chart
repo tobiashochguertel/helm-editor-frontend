@@ -6,7 +6,7 @@ CURRENT_PATH="$(pwd)"
 "$HOME"/bin/edit-chart.dasel put -f "$COMPOSE_FILE" -s 'services.backend.volumes.index(0)' -v "$CURRENT_PATH:/app/public"
 # cat "$COMPOSE_FILE"
 docker-compose -f "$COMPOSE_FILE" down
-docker-compose -f "$COMPOSE_FILE" up -d
+docker-compose -f "$COMPOSE_FILE" up  --remove-orphans --pull always -d
 
 sleep 1
 
