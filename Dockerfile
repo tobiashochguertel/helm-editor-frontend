@@ -1,22 +1,20 @@
-FROM node:14-slim
+FROM node:14-alpine  AS builder
 
 WORKDIR /app
 
-# Setup a path for using local npm packages
-RUN mkdir -p /opt/node_modules
-
-COPY ./package.json /app
-COPY ./yarn.lock /app
-
+COPY ./package.json /app/package.json
+COPY ./yarn.lock /app/yarn.lock
 RUN yarn install
-
 COPY ./ /app
-
 RUN yarn run build
-# server build needs to run after client build because the client build using Vite
-# removes the dist/ folder before compiling its code
-# RUN yarn run server:build
 
-EXPOSE 3001
+FROM nginx:1.25.1-alpine AS runner
 
-CMD ["yarn", "run", "preview"]
+WORKDIR /usr/share/nginx/html
+RUN rm -rf /etc/nginx/conf.d/default.conf
+
+COPY ./nginx/templates /etc/nginx/templates
+
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+EXPOSE 4173

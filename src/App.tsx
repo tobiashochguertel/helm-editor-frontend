@@ -26,7 +26,7 @@ function App() {
     const [chart, setChart] = useState<Map<string, Content>>(new Map<string, Content>());
     const [chartLoaded, setChartLoaded] = useState(false);
 
-    const [myConfig, setMyConfig] = useState(JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || ""));
+    const [myConfig, setMyConfig] = useState(JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "{}"));
 
     useEffect(() => {
         if (isEmpty(chart)) {

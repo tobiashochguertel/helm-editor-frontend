@@ -25,7 +25,7 @@ export default function MyConfiguration({ name, chart, onChange }: OffCanvasProp
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const [myConfig, setMyConfig] = useState(JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || "");
+  const [myConfig, setMyConfig] = useState(JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || "{}");
 
   const loadFromValuesYaml = (event: unknown) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -81,7 +81,7 @@ export default function MyConfiguration({ name, chart, onChange }: OffCanvasProp
             // defaultValue={myConfig}
             value={myConfig}
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore 
+            // @ts-ignore
             onChange={myConfigChangeHandler}
             options={{
               readOnly: false,
