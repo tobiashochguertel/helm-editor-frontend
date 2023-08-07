@@ -56,7 +56,7 @@ services:
   webapp:
     image: docker.io/tobiashochguertel/th-helm-playground-frontend:latest
     ports:
-      - '4173:4173'
+      - '4173:80'
     environment:
       - BACKEND_PORT=3001
       - BACKEND_HOSTNAME=backend
