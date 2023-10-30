@@ -7,12 +7,14 @@ services:
       - ./gitlab-project:/app/public
     environment:
       - PORT=3001
+    restart: always
   template:
     image: localhost/th-helm-playground-template:latest
     ports:
       - '3002:3002'
     environment:
       - PORT=3002
+    restart: always
   webapp:
     image: localhost/th-helm-playground-webapp:latest
     ports:
@@ -22,3 +24,4 @@ services:
       - BACKEND_HOSTNAME=backend
       - BACKEND_TEMPLATE_HOSTNAME=template
       - BACKEND_TEMPLATE_PORT=3002
+    restart: always

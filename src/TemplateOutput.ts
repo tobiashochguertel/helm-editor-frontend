@@ -20,7 +20,7 @@ export default async function helmChartTemplateOutput(
         valuesYaml = jsYaml.dump(mergedConfig)
     }
 
-    const result = await fetch(`/template`, {
+    const result = await fetch(`/api/template`, {
         method: 'POST',
         cache: "no-cache",
         headers: {

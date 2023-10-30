@@ -8,13 +8,20 @@ import Editor from './components/Editor/Editor';
 import replaceSlash from './components/utils/replaceSlash';
 import Split from 'react-split'
 import './assets/split.css'
+import { useNavigate, useParams } from 'react-router-dom';
 
 function isEmpty(array: Array<unknown> | Map<unknown, unknown>) {
     if (array instanceof Map) return array.size === 0;
     return array.length === 0;
 }
 
+
+
 function App() {
+    const navigate = useNavigate();
+    const params = useParams();
+    const { "*": splat } = params;
+
     const { setToast } = useToasts()
 
     const [output, setOutput] = useState<string>("");
@@ -30,7 +37,7 @@ function App() {
 
     useEffect(() => {
         if (isEmpty(chart)) {
-            fetch(`/api/chart`).then(response => response.json()).then((data) => {
+            fetch(`/api/backend/chart`).then(response => response.json()).then((data) => {
                 // https://www.cloudhadoop.com/2018/09/typescript-how-to-convert-map-tofrom.html
                 const map = new Map<string, Content>();
                 for (const value in data) {
@@ -41,7 +48,7 @@ function App() {
             });
         }
         if (isEmpty(filesTree)) {
-            fetch(`/api/tree`).then(response => response.json()).then((data) => {
+            fetch(`/api/backend/tree`).then(response => response.json()).then((data) => {
                 setFilesTree(data);
             });
         }
@@ -75,7 +82,7 @@ function App() {
         };
 
         if (isFileChange === false) {
-            fetch(`/api/file/${replaceSlash(selectedFile)}`, requestOptions)
+            fetch(`/api/backend/file/${replaceSlash(selectedFile)}`, requestOptions)
                 .then(response => response.text())
                 .then(() => {
                     const currentValue: Content = chart.get(selectedFile) || { filename: selectedFile, content: "", type: "file" } as Content;
@@ -85,12 +92,17 @@ function App() {
         }
     }
 
-    const handler = (path: string) => {
-        setToast({ text: path })
+    function fileSelectionChange(path) {
         if (selectedFile !== path) {
             setIsFileChange(true);
             setSelectedFile(path);
         }
+    }
+
+    const handler = (path: string) => {
+        setToast({ text: path })
+        navigate(`/${path}`);
+        fileSelectionChange(path);
     }
 
     const myConfigurationChangeHandler = (newValue: string) => {
@@ -101,6 +113,10 @@ function App() {
 
     if (chart.size === 0) return (<>'No Files available... or backend not available?'</>)
     if (chartLoaded === false) return (<>'Files Content not yet loaded...'</>)
+
+    if (splat != undefined) {
+        fileSelectionChange(splat);
+    }
 
     return (
         <>

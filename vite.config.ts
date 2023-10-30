@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import pluginRewriteAll from 'vite-plugin-rewrite-all';
 dotenv.config();
 
 import { defineConfig } from 'vite'
@@ -18,21 +19,22 @@ export default defineConfig({
     react(),
     // https://github.com/vdesjs/vite-plugin-monaco-editor/issues/21
     monacoEditorPlugin.default({}),
+    // Vite plugin that fix dev server not rewriting the path includes a dot vite#2190
+    pluginRewriteAll()
   ],
   server: {
     proxy: {
-      // with options: http://localhost:5173/api/bar-> http://jsonplaceholder.typicode.com/bar
-      '/api': {
+      '/api/backend': {
         target: `http://${BACKEND_HOSTNAME}:${BACKEND_PORT}/`,
         changeOrigin: false,
         autoRewrite: true,
-        // rewrite: (path) => path.replace(/^\/api/, ''),
+        rewrite: (path) => path.replace(/^\/api\/backend/, '/api'),
       },
-      '/template': {
+      '/api/template': {
         target: `http://${BACKEND_TEMPLATE_HOSTNAME}:${BACKEND_TEMPLATE_PORT}/`,
         changeOrigin: false,
         autoRewrite: true,
-        // rewrite: (path) => path.replace(/^\/api/, ''),
+        rewrite: (path) => path.replace(/^\/api\/template/, '/template'),
       }
     },
   },
